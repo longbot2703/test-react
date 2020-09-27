@@ -46,12 +46,12 @@ export default function UserForm({user}) {
       <label htmlFor="username">
         Username
       </label>
-      <input name='username' value={username} onChange={event => setUserName(event.target.value)} />
+      <input required name='username' value={username} onChange={event => setUserName(event.target.value)} />
 
       <label htmlFor="password">
         Password
       </label>
-      <input name='password' value={password} onChange={event => setPassword(event.target.value)} />
+      <input required name='password' value={password} onChange={event => setPassword(event.target.value)} />
 
       <br/>
       <br/>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Home from "../screens/home/";
-import Users from "./users";
+import Users from "../screens/users/";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useAuthContext } from "../contexts/authContext";
 import Login from "../screens/auths/login";
