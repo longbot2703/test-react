@@ -4,22 +4,22 @@ import {get} from "../../../services/user";
 import UserForm from "../UserForm";
 
 export default function EditUser() {
-  const {userId} = useParams();
-  const [user, setUser] = useState(null);
+    const {userId} = useParams();
+    const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    getUser();
-  }, [userId]);
+    useEffect(() => {
+        getUser();
+    }, [userId]);
 
-  const getUser = async () => {
-    if (userId) {
-      setUser(await get(userId));
-    }
-  };
+    const getUser = async () => {
+        if (userId) {
+            setUser(await get(userId));
+        }
+    };
 
-  return (
-    <div>
-      <UserForm user={user} />
-    </div>
-  );
+    return (
+        <div>
+            <UserForm user={user} />
+        </div>
+    );
 }

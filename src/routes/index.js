@@ -1,32 +1,75 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route,Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import Home from "../screens/home/";
-import Users from "./users";
+import Users from "./user";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useAuthContext } from "../contexts/authContext";
+import Login from "../screens/login";
+import AuthorizedRoute from "../hoc/AuthorizedRoute";
+import {logoutAction} from "../actions/authActions";
+import {loginAction} from "../actions/authActions";
+
+const useMount = (func) => useEffect(func, []);
 
 export default function Routes() {
-  return (
-    <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/users">Users</Link>
-          </li>
-        </ul>
+    const [authState, authDispatch] = useAuthContext();
 
-        <hr />
+    const [loaded, setLoaded] = useState(false);
 
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
+    useMount(() => {
+        const authStr = localStorage.getItem("auth");
+        if (authStr) {
+            const auth = JSON.parse(authStr);
+            authDispatch(loginAction(auth));
+        }
+        setLoaded(true);
+    });
+
+    const handleLogout = () => {
+        authDispatch(logoutAction());
+        localStorage.removeItem('auth');
+
+    };
+
+    return loaded ? (
+        <Router>
+            <div>
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/users">Users</Link>
+                    </li>
+                    {authState?.accessToken ? (
+                        <>
+                            <li>
+                                <span>Hi, {authState?.user?.userName ?? "guy"}</span>
+                            </li>
+                            <li>
+                                <button id="btn-logout" onClick={handleLogout}>Logout</button>
+                            </li>
+                        </>
+                    ) : (
+                        <li>
+                            <Link to="/login">Login</Link>
+                        </li>
+                    )}
+                </ul>
+
+                <hr />
+
+                <Switch>
+                    <Route exact path="/">
+                        <Home />
+                    </Route>
+                    <Route exact path="/login">
+                        <Login />
+                    </Route>
+                    <AuthorizedRoute path="/users">
+                        <Users />
+                    </AuthorizedRoute>
+                </Switch>
+            </div>
+        </Router>
+    ) : null;
 }
